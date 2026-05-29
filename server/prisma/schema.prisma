@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  PATIENT
+}
+
+enum ConsultationType {
+  IN_PERSON
+  TELEHEALTH
+}
+
+enum ScheduleStatus {
+  AVAILABLE
+  BOOKED
+}
+
+enum AppointmentStatus {
+  UPCOMING
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         UserRole  @default(PATIENT)
+  createdAt    DateTime  @default(now())
+
+  appointments Appointment[]
+}
+
+model Doctor {
+  id              Int       @id @default(autoincrement())
+  name            String
+  imageUrl        String?
+  specialization  String
+  hospitalBranch  String
+  averageRating   Float    @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  schedules Schedule[]
+}
+
+model Schedule {
+  id               Int @id @default(autoincrement())
+  doctorId         Int
+  availableDate    DateTime
+  timeSlot         String
+  consultationType ConsultationType
+  status           ScheduleStatus @default(AVAILABLE)
+
+  doctor      Doctor      @relation(fields: [doctorId], references: [id])
+  appointment Appointment?
+}
+
+model Appointment {
+  id         Int @id @default(autoincrement())
+  patientId  Int
+  scheduleId Int @unique
+
+  status     AppointmentStatus @default(UPCOMING)
+  rating     Int?
+  ratedAt    DateTime?
+  createdAt  DateTime @default(now())
+
+  patient  User     @relation(fields: [patientId], references: [id])
+  schedule Schedule @relation(fields: [scheduleId], references: [id])
+}
