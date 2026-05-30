@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import authRoute from './features/auth/auth.route'
@@ -7,6 +7,8 @@ import patientRoute from './features/patient/patient.route'
 import { Toaster } from 'react-hot-toast'
 import { useGetMeQuery } from './features/auth/authApi'
 import { setCredentials, setAuthChecked } from './features/auth/authSlice'
+import ErrorBoundary from './components/ErrorBoundary'
+import LoadingFallback from './components/LoadingFallback'
 
 const route = createBrowserRouter([
   ...authRoute,
@@ -20,21 +22,25 @@ function AppContent() {
 
   useEffect(() => {
     if (isSuccess && data) {
-      dispatch(setCredentials({ user: data.data }))
+      dispatch(setCredentials({ user: data }))
     } else if (isError) {
       dispatch(setAuthChecked())
     }
   }, [isSuccess, isError, data, dispatch])
 
-  return <RouterProvider router={route} />
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <RouterProvider router={route} />
+    </Suspense>
+  )
 }
 
 function App() {
   return (
-    <>
+    <ErrorBoundary>
       <Toaster />
       <AppContent />
-    </>
+    </ErrorBoundary>
   )
 }
 

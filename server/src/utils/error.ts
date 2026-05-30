@@ -1,8 +1,9 @@
 export class ValidationError extends Error {
-    error: any
-    statusCode: number
+    error: any;
+    statusCode: number;
     constructor(error: any) {
         super("Validation error");
+        this.name = "ValidationError";
         this.error = error;
         this.statusCode = 400;
     }
@@ -10,7 +11,7 @@ export class ValidationError extends Error {
 
 
 export class ApiError extends Error {
-    statusCode: number
+    statusCode: number;
 
     constructor(message: string, statusCode: number) {
         super(message);

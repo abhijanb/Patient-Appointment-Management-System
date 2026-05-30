@@ -2,10 +2,13 @@ import { useNavigate } from 'react-router-dom'
 import { Search, UserCircle } from 'lucide-react'
 import { APP_NAME } from '../../../config'
 import { useState } from 'react'
+import { useAppSelector } from '../../../store/store'
+import { selectCurrentUser } from '../../auth/authSlice'
 
 export default function AdminHeader() {
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
+  const user = useAppSelector(selectCurrentUser)
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && searchQuery.trim()) {
@@ -36,10 +39,10 @@ export default function AdminHeader() {
         <div className="flex items-center gap-3">
           <div className="text-right hidden sm:block">
             <p className="text-xs font-semibold uppercase tracking-wider text-gray-900">
-              Admin User
+              {user?.name ?? 'Admin'}
             </p>
             <p className="text-[10px] text-gray-500 uppercase tracking-wider mt-1">
-              Super Admin
+              {user?.role === 'ADMIN' ? 'Admin' : user?.role ?? 'User'}
             </p>
           </div>
           <div className="w-10 h-10 rounded-full border border-gray-200 bg-gray-200 flex items-center justify-center overflow-hidden">

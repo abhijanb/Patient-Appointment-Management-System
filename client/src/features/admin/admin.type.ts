@@ -74,7 +74,4 @@ export interface PaginatedDoctors {
   total: number
 }
 
-export interface ApiResponse<T> {
-  data: T
-  message: string
-}
+

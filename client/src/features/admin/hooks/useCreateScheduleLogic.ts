@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'react-hot-toast'
+import type { ApiError } from '../../../utils/apiError'
 import { useGetDoctorsQuery, useGetDoctorScheduleQuery, useCreateScheduleMutation } from '../adminApi'
 import { createScheduleSchema, type CreateScheduleFormData } from '../admin.validation'
 
@@ -12,7 +13,7 @@ export function useCreateScheduleLogic() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const { data: doctorsData } = useGetDoctorsQuery({ limit: 0 })
-  const doctors = doctorsData?.data?.doctors ?? []
+  const doctors = doctorsData?.doctors ?? []
   const [createSchedule, { isLoading }] = useCreateScheduleMutation()
 
   const initialDoctorId = searchParams.get('doctorId') || ''
@@ -37,10 +38,10 @@ export function useCreateScheduleLogic() {
   const selectedDate = watch('availableDate')
   const selectedTime = watch('timeSlot')
 
-  const { data: doctorSlotsData } = useGetDoctorScheduleQuery(Number(selectedDoctor), {
+  const { data: doctorSlotsData } = useGetDoctorScheduleQuery({ doctorId: Number(selectedDoctor) }, {
     skip: !selectedDoctor,
   })
-  const allSlots = doctorSlotsData?.data?.schedules ?? []
+  const allSlots = doctorSlotsData?.schedules ?? []
   const occupiedSlots = new Set(
     selectedDate
       ? allSlots.filter((s) => s.availableDate.startsWith(selectedDate)).map((s) => s.timeSlot)
@@ -61,8 +62,8 @@ export function useCreateScheduleLogic() {
       }).unwrap()
       toast.success('Schedule slot created successfully')
       navigate('/admin/schedule')
-    } catch (error: any) {
-      toast.error(error.data?.message || 'Failed to create schedule slot')
+    } catch (error: unknown) {
+      toast.error((error as ApiError).data?.message || 'Failed to create schedule slot')
     }
   }
 

@@ -1,4 +1,4 @@
-import { Sun, Moon } from 'lucide-react'
+import { Sun, Moon, Video } from 'lucide-react'
 import type { ScheduleSlot } from '../patientApi'
 
 interface Props {
@@ -29,7 +29,14 @@ export default function SlotSection({ title, icon, slots, selectedSlot, onSelect
                 : 'border-gray-200 hover:border-secondary hover:text-secondary'
             }`}
           >
-            {slot.timeSlot}
+            <span className="block">{slot.timeSlot}</span>
+            <span className={`block mt-1 text-[10px] uppercase tracking-wider font-semibold ${
+              slot.consultationType === 'TELEHEALTH'
+                ? 'text-purple-500'
+                : 'text-green-600'
+            }`}>
+              {slot.consultationType === 'TELEHEALTH' ? 'Telehealth' : 'In-Person'}
+            </span>
           </button>
         ))}
       </div>

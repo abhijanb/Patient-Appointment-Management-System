@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { useAppSelector } from '../../../store/store'
 import { useUpdateProfileMutation, useChangePasswordMutation } from '../../auth/authApi'
 import { setCredentials } from '../../auth/authSlice'
+import type { ApiError } from '../../../utils/apiError'
 
 export function useSettingsLogic() {
   const user = useAppSelector((state) => state.auth.user)!
@@ -27,10 +28,10 @@ export function useSettingsLogic() {
   const handleSaveProfile = async () => {
     try {
       const res = await updateProfile({ name, email }).unwrap()
-      dispatch(setCredentials({ user: res.data }))
+      dispatch(setCredentials({ user: res }))
       toast.success('Profile updated successfully')
-    } catch (err: any) {
-      toast.error(err.data?.message || 'Failed to update profile')
+    } catch (err: unknown) {
+      toast.error((err as ApiError).data?.message || 'Failed to update profile')
     }
   }
 
@@ -53,8 +54,8 @@ export function useSettingsLogic() {
       setCurrentPassword('')
       setNewPassword('')
       setConfirmPassword('')
-    } catch (err: any) {
-      toast.error(err.data?.message || 'Failed to change password')
+    } catch (err: unknown) {
+      toast.error((err as ApiError).data?.message || 'Failed to change password')
     }
   }
 

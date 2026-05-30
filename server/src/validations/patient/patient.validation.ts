@@ -5,6 +5,8 @@ const listDoctorsQuerySchema = z.object({
   specialization: z.string().optional(),
   hospitalBranch: z.string().optional(),
   consultationType: z.string().optional(),
+  page: z.coerce.number().int().positive().optional(),
+  limit: z.coerce.number().int().min(0).max(100).optional(),
 });
 
 const doctorIdParamSchema = z.object({
@@ -13,6 +15,7 @@ const doctorIdParamSchema = z.object({
 
 const doctorSchedulesQuerySchema = z.object({
   date: z.string().optional(),
+  consultationType: z.enum(["IN_PERSON", "TELEHEALTH"]).optional(),
 });
 
 const bookAppointmentBodySchema = z.object({

@@ -5,6 +5,7 @@ import {
 } from 'lucide-react'
 import { useAppDispatch, useAppSelector } from '../../../store/store'
 import { logOut } from '../../auth/authSlice'
+import { deleteCookie } from '../../../utils/cookie'
 
 const baseClass =
   'flex items-center gap-4 p-3 rounded-lg transition-all text-sm font-bold'
@@ -15,7 +16,7 @@ export default function Sidebar() {
   const navigate = useNavigate()
 
   const handleSignOut = () => {
-    document.cookie = 'accessToken=; path=/; max-age=0'
+    deleteCookie('accessToken')
     dispatch(logOut())
     navigate('/login')
   }

@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import validateOrThrow from "../utils/validateOrThrow";
 import { loginInputSchema, registerInputSchema, updateProfileInputSchema, changePasswordInputSchema } from "../validations/auth.validation";
-import * as authService from "../services/auth.service"
+import * as authService from "../services/auth.service";
 import { successResponse } from "../utils/response";
 
 async function register(req: Request, res: Response) {
@@ -18,8 +18,8 @@ async function login(req: Request, res: Response) {
             httpOnly: true,
             secure: true,
             sameSite: "lax",
-            maxAge: 1000 * 60 * 60 * 24 * 7
-        })
+            maxAge: 1000 * 60 * 60 * 24 * 7,
+        });
     }
     const { token: _, ...userWithoutToken } = user;
     successResponse(res, userWithoutToken, 200, "User logged in successfully");
@@ -42,10 +42,9 @@ async function changePassword(req: Request, res: Response) {
     successResponse(res, null, 200, "Password changed successfully");
 }
 
-async function deactivateAccount(req: Request, res: Response) {
-    await authService.deactivateAccount(req.user!.id);
+async function logout(req: Request, res: Response) {
     res.clearCookie("accessToken");
-    successResponse(res, null, 200, "Account deactivated successfully");
+    successResponse(res, null, 200, "Logged out successfully");
 }
 
-export { register, login, me, updateProfile, changePassword, deactivateAccount }
+export { register, login, me, updateProfile, changePassword, logout };

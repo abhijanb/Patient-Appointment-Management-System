@@ -4,7 +4,7 @@ export function useAdminDashboard() {
   const { data, isLoading, isFetching } = useGetDashboardQuery()
 
   return {
-    dashboard: data?.data,
+    dashboard: data,
     isLoading: isLoading || isFetching,
   }
 }

@@ -6,12 +6,12 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 async function register(registerInput:registerInputType) {
-    const {email,passwordHash,name} = registerInput;
+    const {email,password,name} = registerInput;
 
     const userExists = await prisma.user.findUnique({where:{email}});
     if(userExists) throw new ApiError("User already exists",400);
 
-    const hashedPassword = await bcrypt.hash(passwordHash,12);
+    const hashedPassword = await bcrypt.hash(password,12);
 
     const user = await prisma.user.create({
         data:{
@@ -34,9 +34,9 @@ async function login(loginInput:loginInputType) {
     const isPasswordValid = await bcrypt.compare(password,user.passwordHash);
     if(!isPasswordValid) throw new ApiError("Invalid password",401);
     
-    const token = jwt.sign({id:user.id,role:user.role},env.accessTokenSecrect!,{
-        expiresIn:env.accessTokenExpiry as any
-    });
+    const token = jwt.sign({id:user.id,role:user.role},env.accessTokenSecret,{
+        expiresIn:env.accessTokenExpiry
+    } as Parameters<typeof jwt.sign>[2]);
 
     const {passwordHash:_,...userWithoutPassword} = user;
     
@@ -44,6 +44,9 @@ async function login(loginInput:loginInputType) {
 }
 
 async function updateProfile(userId: number, input: updateProfileInputType) {
+    const existingUser = await prisma.user.findUnique({ where: { id: userId } });
+    if (!existingUser) throw new ApiError("User not found", 404);
+
     if (input.email) {
         const existing = await prisma.user.findFirst({
             where: { email: input.email, id: { not: userId } },
@@ -79,23 +82,4 @@ async function changePassword(userId: number, input: changePasswordInputType) {
     });
 }
 
-async function deactivateAccount(userId: number) {
-    const appointmentCount = await prisma.appointment.count({
-        where: { patientId: userId, status: "UPCOMING" },
-    });
-
-    if (appointmentCount > 0) {
-        throw new ApiError("Cannot deactivate account with upcoming appointments", 400);
-    }
-
-    await prisma.user.update({
-        where: { id: userId },
-        data: {
-            name: "Deactivated User",
-            email: `deactivated-${userId}@deleted.local`,
-            passwordHash: "",
-        },
-    });
-}
-
-export {register, login, updateProfile, changePassword, deactivateAccount}
+export {register, login, updateProfile, changePassword};

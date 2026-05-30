@@ -1,5 +1,5 @@
 import type { Response, Request } from "express";
-import * as scheduleService from "../../services/admin/schedule.service"
+import * as scheduleService from "../../services/admin/schedule.service";
 import validateOrThrow from "../../utils/validateOrThrow";
 import { successResponse } from "../../utils/response";
 import { getSchedulesQuerySchema, createScheduleSchema, scheduleIdParamSchema } from "../../validations/admin/schedule.validation";

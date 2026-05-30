@@ -1,4 +1,5 @@
 import { Video, XCircle } from 'lucide-react'
+import { formatDate } from '../../../utils/date'
 
 const avatarBgColors = [
   'bg-secondary-container text-white',
@@ -17,13 +18,6 @@ function getInitials(name: string) {
     .toUpperCase()
     .slice(0, 2)
 }
-
-function formatCardDate(iso: string) {
-  const d = new Date(iso)
-  const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
-  return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`
-}
-
 function avatarColor(name: string) {
   let hash = 0
   for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash)
@@ -74,14 +68,14 @@ export default function UpcomingAppointmentCard({ appt, onCancel }: Props) {
         </div>
         <div className="text-right shrink-0">
           <p className={`text-xs font-semibold px-3 py-1 rounded-lg ${isTelehealth ? 'bg-blue-100 text-primary' : 'bg-gray-100 text-gray-500'}`}>
-            {formatCardDate(appt.schedule.availableDate)}
+            {formatDate(appt.schedule.availableDate, true)}
           </p>
           <p className="text-xl font-semibold mt-1">{appt.schedule.timeSlot}</p>
         </div>
       </div>
 
       <div className="flex gap-2 mt-4">
-        <button onClick={() => onCancel(appt.id)} className="px-4 py-3 border border-gray-200 rounded-lg text-red-600 hover:bg-red-50 transition-colors cursor-pointer" title="Cancel">
+        <button aria-label="Cancel appointment" onClick={() => onCancel(appt.id)} className="px-4 py-3 border border-gray-200 rounded-lg text-red-600 hover:bg-red-50 transition-colors cursor-pointer" title="Cancel">
           <XCircle size={16} />
         </button>
       </div>

@@ -1,6 +1,6 @@
 import { Layers, List, CalendarDays, Clock, Edit, Trash2, ChevronLeft, ChevronRight, User } from 'lucide-react'
 import { getImageUrl } from '../../../utils/getImageUrl'
-import { statusStyles, typeStyles, typeLabels } from '../hooks/useScheduleLogic'
+import { statusStyles, typeStyles, typeLabels } from '../constants'
 import type { ScheduleSlot } from '../admin.type'
 
 interface Props {
@@ -31,10 +31,10 @@ export default function ScheduleTable({ schedules, total, page, totalPages, isLo
           </button>
           <div className="h-6 w-px bg-gray-200" />
           <div className="flex rounded-lg overflow-hidden border border-gray-200">
-            <button className="p-2 bg-blue-100 text-blue-700 cursor-pointer">
+            <button aria-label="List view" className="p-2 bg-blue-100 text-blue-700 cursor-pointer">
               <List size={18} />
             </button>
-            <button className="p-2 text-gray-500 hover:bg-gray-100 transition-colors cursor-pointer">
+            <button aria-label="Calendar view" className="p-2 text-gray-500 hover:bg-gray-100 transition-colors cursor-pointer">
               <CalendarDays size={18} />
             </button>
           </div>
@@ -106,10 +106,10 @@ export default function ScheduleTable({ schedules, total, page, totalPages, isLo
                   </td>
                   <td className="px-4 py-4 text-right">
                     <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button className="p-2 text-secondary hover:bg-blue-50 rounded-lg transition-colors cursor-pointer">
+                      <button aria-label="Edit schedule" className="p-2 text-secondary hover:bg-blue-50 rounded-lg transition-colors cursor-pointer">
                         <Edit size={16} />
                       </button>
-                      <button className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer" onClick={() => onDelete(slot.id)}>
+                      <button aria-label="Delete schedule" className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer" onClick={() => onDelete(slot.id)}>
                         <Trash2 size={16} />
                       </button>
                     </div>
@@ -127,6 +127,7 @@ export default function ScheduleTable({ schedules, total, page, totalPages, isLo
         {totalPages > 1 && (
           <div className="flex items-center gap-1">
             <button
+              aria-label="Previous page"
               className="p-2 text-gray-500 hover:bg-gray-200 rounded-lg disabled:opacity-30 cursor-pointer"
               disabled={page <= 1}
               onClick={() => onPageChange(page - 1)}
@@ -163,6 +164,7 @@ export default function ScheduleTable({ schedules, total, page, totalPages, isLo
               )
             })()}
             <button
+              aria-label="Next page"
               className="p-2 text-gray-500 hover:bg-gray-200 rounded-lg disabled:opacity-30 cursor-pointer"
               disabled={page >= totalPages}
               onClick={() => onPageChange(page + 1)}

@@ -1,6 +1,6 @@
 import { ArrowRight, Star as StarIcon, User } from 'lucide-react'
 import type { Doctor, ScheduleSlot } from '../patientApi'
-import { formatDateDisplay } from '../hooks/useBookAppointmentsLogic'
+import { formatDate as formatDateDisplay } from '../../../utils/date'
 
 interface Props {
   doctor: Doctor
@@ -27,7 +27,7 @@ export default function BookingSummarySidebar({
           <p className="text-sm text-gray-500">{doctor.specialization}</p>
           <div className="flex items-center mt-1 bg-green-50 rounded px-2 py-0.5 w-fit">
             <StarIcon size={14} className="text-yellow-500 fill-yellow-500 mr-1" />
-            <span className="text-xs font-semibold">{doctor.averageRating.toFixed(1)}</span>
+            <span className="text-xs font-semibold">{Number(doctor.averageRating).toFixed(1)}</span>
           </div>
         </div>
       </div>
@@ -39,6 +39,14 @@ export default function BookingSummarySidebar({
         <div className="flex justify-between items-center">
           <span className="text-sm text-gray-500">Selected Time</span>
           <span className="text-sm font-bold text-primary">{selectedSlot?.timeSlot ?? '-'}</span>
+        </div>
+        <div className="flex justify-between items-center">
+          <span className="text-sm text-gray-500">Consultation</span>
+          <span className={`text-sm font-bold ${selectedSlot?.consultationType === 'TELEHEALTH' ? 'text-purple-600' : 'text-green-600'}`}>
+            {selectedSlot
+              ? selectedSlot.consultationType === 'TELEHEALTH' ? 'Telehealth' : 'In-Person'
+              : '-'}
+          </span>
         </div>
       </div>
       {bookError && (

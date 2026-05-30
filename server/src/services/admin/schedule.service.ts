@@ -1,4 +1,5 @@
 import { prisma } from "../../lib/prisma";
+import { ApiError } from "../../utils/error";
 import type { getSchedulesQueryType, createScheduleType } from "../../validations/admin/schedule.validation";
 
 async function getSchedules(params: getSchedulesQueryType) {
@@ -10,8 +11,8 @@ async function getSchedules(params: getSchedulesQueryType) {
         ...(status ? { status } : {}),
         ...(dateFrom || dateTo ? {
             availableDate: {
-                ...(dateFrom ? { gte: new Date(dateFrom) } : {}),
-                ...(dateTo ? { lte: new Date(dateTo) } : {}),
+                ...(dateFrom ? { gte: dateFrom } : {}),
+                ...(dateTo ? { lte: dateTo } : {}),
             }
         } : {}),
     };
@@ -45,6 +46,10 @@ async function createSchedule(params: createScheduleType) {
 }
 
 async function deleteSchedule(id: number) {
+    const existing = await prisma.schedule.findUnique({ where: { id } });
+    if (!existing) {
+        throw new ApiError("Schedule not found", 404);
+    }
     await prisma.schedule.delete({ where: { id } });
 }
 

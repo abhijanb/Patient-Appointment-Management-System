@@ -44,11 +44,6 @@ export interface PatientAppointment {
   }
 }
 
-interface ApiResponse<T> {
-  data: T
-  message: string
-}
-
 export const patientApi = createApi({
   reducerPath: 'patientApi',
   baseQuery: fetchBaseQuery({
@@ -57,32 +52,32 @@ export const patientApi = createApi({
   }),
   tagTypes: ['PatientAppointments', 'PatientDoctors', 'DoctorSchedules'],
   endpoints: (builder) => ({
-    getDoctors: builder.query<ApiResponse<Doctor[]>, { search?: string; specialization?: string; hospitalBranch?: string; consultationType?: string } | void>({
+    getDoctors: builder.query<{ doctors: Doctor[]; total: number }, { search?: string; specialization?: string; hospitalBranch?: string; consultationType?: string; page?: number; limit?: number } | void>({
       query: (params) => ({
         url: '/patient/doctors',
         params,
       }),
       providesTags: ['PatientDoctors'],
     }),
-    getDoctorSchedules: builder.query<ApiResponse<ScheduleSlot[]>, { doctorId: number; date?: string }>({
-      query: ({ doctorId, date }) => ({
+    getDoctorSchedules: builder.query<ScheduleSlot[], { doctorId: number; date?: string; consultationType?: string }>({
+      query: ({ doctorId, date, consultationType }) => ({
         url: `/patient/doctors/${doctorId}/schedules`,
-        params: date ? { date } : undefined,
+        params: { ...(date ? { date } : {}), ...(consultationType ? { consultationType } : {}) },
       }),
       providesTags: ['DoctorSchedules'],
     }),
-    getPatientAppointments: builder.query<ApiResponse<PatientAppointment[]>, { status?: string } | void>({
+    getPatientAppointments: builder.query<PatientAppointment[], { status?: string } | void>({
       query: (params) => ({
         url: '/patient/appointments',
         params,
       }),
       providesTags: ['PatientAppointments'],
     }),
-    getUpcomingAppointments: builder.query<ApiResponse<PatientAppointment[]>, void>({
+    getUpcomingAppointments: builder.query<PatientAppointment[], void>({
       query: () => '/patient/appointments/upcoming',
       providesTags: ['PatientAppointments'],
     }),
-    bookAppointment: builder.mutation<ApiResponse<PatientAppointment>, { scheduleId: number }>({
+    bookAppointment: builder.mutation<PatientAppointment, { scheduleId: number }>({
       query: (body) => ({
         url: '/patient/appointments/book',
         method: 'POST',
@@ -90,7 +85,7 @@ export const patientApi = createApi({
       }),
       invalidatesTags: ['PatientAppointments', 'DoctorSchedules'],
     }),
-    rateAppointment: builder.mutation<ApiResponse<PatientAppointment>, { appointmentId: number; rating: number }>({
+    rateAppointment: builder.mutation<PatientAppointment, { appointmentId: number; rating: number }>({
       query: ({ appointmentId, rating }) => ({
         url: `/patient/appointments/${appointmentId}/rate`,
         method: 'POST',
@@ -98,7 +93,7 @@ export const patientApi = createApi({
       }),
       invalidatesTags: ['PatientAppointments', 'PatientDoctors'],
     }),
-    cancelAppointment: builder.mutation<ApiResponse<PatientAppointment>, { appointmentId: number }>({
+    cancelAppointment: builder.mutation<PatientAppointment, { appointmentId: number }>({
       query: ({ appointmentId }) => ({
         url: `/patient/appointments/${appointmentId}/cancel`,
         method: 'PATCH',

@@ -20,8 +20,9 @@ export default function ProfileSection({
 
       <div className="space-y-4">
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-semibold text-gray-500 px-1">Full Name</label>
+          <label htmlFor="full-name" className="text-xs font-semibold text-gray-500 px-1">Full Name</label>
           <input
+            id="full-name"
             className="rounded-lg border-gray-200 focus:border-primary focus:ring-primary py-2 px-4 text-base"
             type="text"
             value={name}
@@ -29,8 +30,9 @@ export default function ProfileSection({
           />
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-semibold text-gray-500 px-1">Email Address</label>
+          <label htmlFor="email-address" className="text-xs font-semibold text-gray-500 px-1">Email Address</label>
           <input
+            id="email-address"
             className="rounded-lg border-gray-200 focus:border-primary focus:ring-primary py-2 px-4 text-base"
             type="email"
             value={email}

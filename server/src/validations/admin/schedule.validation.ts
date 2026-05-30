@@ -6,8 +6,8 @@ const getSchedulesQuerySchema = z.object({
     doctorId: z.coerce.number().int().positive().optional(),
     consultationType: z.enum(["IN_PERSON", "TELEHEALTH"]).optional(),
     status: z.enum(["AVAILABLE", "BOOKED"]).optional(),
-    dateFrom: z.string().optional(),
-    dateTo: z.string().optional(),
+    dateFrom: z.string().pipe(z.coerce.date()).optional(),
+    dateTo: z.string().pipe(z.coerce.date()).optional(),
 });
 
 const createScheduleSchema = z.object({

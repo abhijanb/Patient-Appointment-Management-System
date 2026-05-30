@@ -74,32 +74,29 @@ export default function LoginPage() {
               <div className="flex justify-between items-center">
                 <label
                   className={`block text-xs font-semibold tracking-wider transition-all duration-300 ease-out ${
-                    errors.passwordHash ? 'text-red-500' : 'text-gray-500 group-focus-within:text-primary'
+                    errors.password ? 'text-red-500' : 'text-gray-500 group-focus-within:text-primary'
                   }`}
-                  htmlFor="passwordHash"
+                  htmlFor="password"
                 >
                   Password
                 </label>
-                <a className="text-xs font-semibold tracking-wider text-secondary hover:text-primary-container transition-all duration-300 ease-out" href="#">
-                  Forgot password?
-                </a>
               </div>
               <div className={`relative rounded-lg transition-all duration-300 ease-out ${
-                errors.passwordHash ? 'focus-within:shadow-[0_0_0_4px_rgba(239,68,68,0.1)]' : 'focus-within:shadow-[0_0_0_4px_rgba(15,76,129,0.1)]'
+                errors.password ? 'focus-within:shadow-[0_0_0_4px_rgba(239,68,68,0.1)]' : 'focus-within:shadow-[0_0_0_4px_rgba(15,76,129,0.1)]'
               }`}>
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className={errors.passwordHash ? 'text-red-400' : 'text-gray-400'} size={20} />
+                  <Lock className={errors.password ? 'text-red-400' : 'text-gray-400'} size={20} />
                 </div>
                 <input
                   className={`block w-full pl-10 pr-12 py-3 bg-gray-100 border rounded-lg text-base text-gray-900 placeholder:text-gray-400 focus:outline-none transition-all duration-300 ease-out ${
-                    errors.passwordHash 
+                    errors.password 
                       ? 'border-red-500 focus:border-red-500' 
                       : 'border-gray-300 focus:border-primary'
                   }`}
-                  id="passwordHash"
+                  id="password"
                   placeholder="••••••••"
                   type={showPassword ? 'text' : 'password'}
-                  {...register('passwordHash')}
+                  {...register('password')}
                 />
                 <button
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-500 transition-all duration-300 ease-out cursor-pointer"
@@ -109,8 +106,8 @@ export default function LoginPage() {
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
-              {errors.passwordHash && (
-                <p className="text-red-500 text-xs mt-1 font-medium">{errors.passwordHash.message}</p>
+              {errors.password && (
+                <p className="text-red-500 text-xs mt-1 font-medium">{errors.password.message}</p>
               )}
             </div>
 

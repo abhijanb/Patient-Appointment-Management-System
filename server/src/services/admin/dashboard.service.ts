@@ -21,6 +21,7 @@ async function getDashboard() {
     const recentDoctors = await prisma.doctor.findMany({
         orderBy: { createdAt: "desc" },
         take: 3,
+        select: { id: true, name: true, imageUrl: true, specialization: true },
     });
 
     return {

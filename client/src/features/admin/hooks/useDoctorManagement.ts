@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { addDoctorSchema, type AddDoctorFormData } from '../admin.validation'
 import type { Doctor } from '../admin.type'
 import { useGetDoctorsQuery, useAddDoctorMutation, useUpdateDoctorMutation, useDeleteDoctorMutation } from '../adminApi'
+import type { ApiError } from '../../../utils/apiError'
 import { handleServerFormError } from '../../../utils/handleServerError'
 
 export function useDoctorManagement() {
@@ -71,8 +72,7 @@ export function useDoctorManagement() {
       }
 
       if (isEditing) {
-        formData.append('id', editingDoctor.id.toString())
-        await updateDoctor(formData).unwrap()
+        await updateDoctor({ id: editingDoctor.id, body: formData }).unwrap()
         toast.success('Doctor updated successfully')
       } else {
         await addDoctor(formData).unwrap()
@@ -84,7 +84,7 @@ export function useDoctorManagement() {
       setEditingDoctor(null)
     } catch (error: unknown) {
       if (!handleServerFormError<AddDoctorFormData>(error, setError)) {
-        toast.error((error as any)?.data?.message || `Failed to ${isEditing ? 'update' : 'add'} doctor`)
+        toast.error((error as ApiError).data?.message || `Failed to ${isEditing ? 'update' : 'add'} doctor`)
       }
     }
   }
@@ -112,7 +112,7 @@ export function useDoctorManagement() {
       await deleteDoctor(id).unwrap()
       toast.success('Doctor deleted successfully')
     } catch (error: unknown) {
-      toast.error((error as any)?.data?.message || 'Failed to delete doctor')
+      toast.error((error as ApiError).data?.message || 'Failed to delete doctor')
     }
   }
 
@@ -128,8 +128,8 @@ export function useDoctorManagement() {
   }
 
   return {
-    doctors: data?.data?.doctors ?? [],
-    totalCount: data?.data?.total ?? 0,
+    doctors: data?.doctors ?? [],
+    totalCount: data?.total ?? 0,
     isLoading: isLoading || isFetching,
     isSubmitting: isAdding || isUpdating || isDeleting,
     search,
@@ -162,6 +162,5 @@ export function useDoctorManagement() {
     reset,
     fileInputRef,
     handleDelete,
-    APP_NAME: import.meta.env.VITE_APP_NAME || 'HealthSync Pro',
   }
 }

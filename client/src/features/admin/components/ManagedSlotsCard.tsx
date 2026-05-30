@@ -1,6 +1,6 @@
 import { CheckCircle, Lock, Plus } from 'lucide-react'
 import type { ScheduleSlot } from '../admin.type'
-import { typeLabels, statusStyles } from '../hooks/useDoctorProfileLogic'
+import { typeLabels, statusStyles } from '../constants'
 
 interface Props {
   slots: ScheduleSlot[]

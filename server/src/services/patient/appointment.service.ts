@@ -1,24 +1,7 @@
 import { prisma } from "../../lib/prisma";
 import { ApiError } from "../../utils/error";
 
-async function autoCompletePastAppointments() {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    await prisma.appointment.updateMany({
-        where: {
-            status: "UPCOMING",
-            schedule: {
-                availableDate: { lt: today },
-            },
-        },
-        data: { status: "COMPLETED" },
-    });
-}
-
 async function getPatientAppointments(patientId: number, status?: string) {
-    await autoCompletePastAppointments();
-
     const where: any = { patientId };
     if (status) where.status = status;
 

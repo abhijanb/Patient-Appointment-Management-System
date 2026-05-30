@@ -21,8 +21,8 @@ export default function DatePicker({ weekDates, selectedDate, onSelectDate }: Pr
           {selectedDate ? new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : ''}
         </h2>
         <div className="flex gap-2">
-          <button className="p-2 hover:bg-gray-100 rounded-full border border-gray-200 cursor-pointer"><ChevronLeft size={18} /></button>
-          <button className="p-2 hover:bg-gray-100 rounded-full border border-gray-200 cursor-pointer"><ChevronRight size={18} /></button>
+          <button aria-label="Previous week" className="p-2 hover:bg-gray-100 rounded-full border border-gray-200 cursor-pointer"><ChevronLeft size={18} /></button>
+          <button aria-label="Next week" className="p-2 hover:bg-gray-100 rounded-full border border-gray-200 cursor-pointer"><ChevronRight size={18} /></button>
         </div>
       </div>
       <div className="flex gap-2 overflow-x-auto pb-2">

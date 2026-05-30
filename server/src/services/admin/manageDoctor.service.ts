@@ -1,6 +1,6 @@
 import { prisma } from "../../lib/prisma";
 import { ApiError } from "../../utils/error";
-import type { addDoctorType, getDoctorsQueryType, updateDoctorType } from "../../validations/admin/manageDoctor.validation"
+import type { addDoctorType, getDoctorsQueryType, updateDoctorType } from "../../validations/admin/manageDoctor.validation";
 
 async function getAllDoctor(params: getDoctorsQueryType) {
     const { page = 1, limit = 10, search = "", specialization = "", hospitalBranch = "", minRating = 0, sortBy = "createdAt", sortOrder = "desc" } = params;
@@ -15,7 +15,7 @@ async function getAllDoctor(params: getDoctorsQueryType) {
         ...(specialization && { specialization: { equals: specialization } }),
         ...(hospitalBranch && { hospitalBranch: { equals: hospitalBranch } }),
         ...(minRating && { averageRating: { gte: minRating } }),
-    }
+    };
 
     const [doctors, total] = await Promise.all([
         prisma.doctor.findMany({
@@ -24,7 +24,7 @@ async function getAllDoctor(params: getDoctorsQueryType) {
             ...(limit ? { skip: (page - 1) * limit, take: limit } : {}),
         }),
         prisma.doctor.count({ where }),
-    ])
+    ]);
 
     return { doctors, total };
 }
@@ -60,16 +60,18 @@ async function updateDoctor(params: updateDoctorType & { id: number, imageUrl?: 
 }
 
 async function deleteDoctor(id: number) {
-    await prisma.$transaction(async (tx) => {
-        await tx.schedule.deleteMany({ where: { doctorId: id } })
-        await tx.doctor.delete({ where: { id } })
-    })
+    const existing = await prisma.doctor.findUnique({ where: { id } });
+    if (!existing) {
+        throw new ApiError("Doctor not found", 404);
+    }
+
+    await prisma.doctor.delete({ where: { id } });
 }
 
 async function getDoctorById(id: number) {
-    const doctor = await prisma.doctor.findUnique({ where: { id } })
-    if (!doctor) throw new ApiError("Doctor not found", 404)
-    return doctor
+    const doctor = await prisma.doctor.findUnique({ where: { id } });
+    if (!doctor) throw new ApiError("Doctor not found", 404);
+    return doctor;
 }
 
-export { getAllDoctor, getDoctorById, addDoctor, updateDoctor, deleteDoctor }
+export { getAllDoctor, getDoctorById, addDoctor, updateDoctor, deleteDoctor };

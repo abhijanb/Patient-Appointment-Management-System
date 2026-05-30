@@ -42,14 +42,14 @@ export const authApi = createApi({
                     body
                 }),
             }),
-            deactivateAccount: builder.mutation<{ message: string }, void>({
+            logout: builder.mutation<{ message: string }, void>({
                 query: () => ({
-                    url: "/auth/account",
-                    method: "DELETE",
+                    url: "/auth/logout",
+                    method: "POST",
                 }),
             }),
         }
     }
 })
 
-export const { useLoginMutation, useRegisterMutation, useGetMeQuery, useUpdateProfileMutation, useChangePasswordMutation, useDeactivateAccountMutation } = authApi
+export const { useLoginMutation, useRegisterMutation, useGetMeQuery, useUpdateProfileMutation, useChangePasswordMutation, useLogoutMutation } = authApi

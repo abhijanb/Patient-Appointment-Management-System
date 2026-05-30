@@ -44,9 +44,7 @@ export default function RegisterPage() {
                     id="fullName"
                     placeholder="John Doe"
                     type="text"
-                    {...register('name', {
-                      required: 'Full name is required',
-                    })}
+                    {...register('name')}
                   />
                 </div>
                 {errors.name && (
@@ -67,13 +65,7 @@ export default function RegisterPage() {
                     id="email"
                     placeholder="name@clinic.com"
                     type="email"
-                    {...register('email', {
-                      required: 'Email address is required',
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: 'Please enter a valid email address',
-                      },
-                    })}
+                    {...register('email')}
                   />
                 </div>
                 {errors.email && (
@@ -89,22 +81,12 @@ export default function RegisterPage() {
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                   <input
                     className={`w-full pl-10 pr-12 py-3 bg-white border rounded-lg text-base focus:ring-2 focus:ring-primary-container transition-all focus:outline-none ${
-                      errors.passwordHash ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-primary'
+                      errors.password ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-primary'
                     }`}
                     id="password"
                     placeholder="••••••••"
                     type={showPassword ? 'text' : 'password'}
-                    {...register('passwordHash', {
-                      required: 'Password is required',
-                      minLength: {
-                        value: 8,
-                        message: 'Password must be at least 8 characters',
-                      },
-                      pattern: {
-                        value: /^(?=.*[0-9])/,
-                        message: 'Password must contain at least one number',
-                      },
-                    })}
+                    {...register('password')}
                   />
                   <button
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary transition-colors cursor-pointer"
@@ -115,8 +97,8 @@ export default function RegisterPage() {
                   </button>
                 </div>
                 <p className="text-sm text-gray-400 mt-1">Minimum 8 characters with at least one number.</p>
-                {errors.passwordHash && (
-                  <p className="text-red-500 text-xs mt-1 font-medium">{errors.passwordHash.message}</p>
+                {errors.password && (
+                  <p className="text-red-500 text-xs mt-1 font-medium">{errors.password.message}</p>
                 )}
               </div>
             </div>
@@ -126,14 +108,12 @@ export default function RegisterPage() {
                 className="mt-1 h-5 w-5 rounded border-gray-300 accent-[#0f4c81] cursor-pointer"
                 id="terms"
                 type="checkbox"
-                {...register('terms', {
-                  required: 'You must agree to the Terms of Service and Privacy Policy',
-                })}
+                {...register('terms')}
               />
               <label className="text-sm text-gray-500 select-none cursor-pointer" htmlFor="terms">
                 I agree to the{' '}
-                <a className="text-primary hover:underline font-semibold" href="#">Terms of Service</a> and{' '}
-                <a className="text-primary hover:underline font-semibold" href="#">Privacy Policy</a>, including the
+                <Link className="text-primary hover:underline font-semibold" to="#">Terms of Service</Link> and{' '}
+                <Link className="text-primary hover:underline font-semibold" to="#">Privacy Policy</Link>, including the
                 processing of health-related data.
               </label>
             </div>

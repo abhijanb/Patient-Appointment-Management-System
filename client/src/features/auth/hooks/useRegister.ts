@@ -7,6 +7,7 @@ import { useRegisterMutation } from '../authApi'
 import { setCredentials } from '../authSlice'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { registerSchema, type RegisterFormData } from '../auth.validation'
+import type { ApiError } from '../../../utils/apiError'
 
 export type RegisterFormInputs = RegisterFormData
 
@@ -24,7 +25,7 @@ export function useRegister() {
     defaultValues: {
       name: '',
       email: '',
-      passwordHash: '',
+      password: '',
       terms: false,
     },
   })
@@ -34,17 +35,17 @@ export function useRegister() {
       const response = await registerMutation({
         name: data.name,
         email: data.email,
-        passwordHash: data.passwordHash
+        password: data.password
       }).unwrap();
       
       dispatch(setCredentials({
-        user: response.data,
+        user: response,
       }))
       
       toast.success("Account created successfully");
     }
-    catch (error: any) {
-      toast.error(error.data?.message || "Registration failed");
+    catch (error: unknown) {
+      toast.error((error as ApiError).data?.message || "Registration failed");
     }
   }
 

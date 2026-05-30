@@ -1,7 +1,9 @@
+import { lazy } from "react";
 import type { RouteObject } from "react-router-dom";
-import RegisterPage from "./page/RegisterPage";
-import LoginPage from "./page/LoginPage";
-import ForbiddenPage from "./page/ForbiddenPage";
+
+const RegisterPage = lazy(() => import("./page/RegisterPage"));
+const LoginPage = lazy(() => import("./page/LoginPage"));
+const ForbiddenPage = lazy(() => import("./page/ForbiddenPage"));
 
 const authRoute:RouteObject[] = [{
     path:"/register",

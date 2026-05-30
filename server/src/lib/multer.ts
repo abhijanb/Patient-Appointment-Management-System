@@ -2,16 +2,17 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 
-const upload = (location: string) => {
+const DEFAULT_MAX_FILE_SIZE = 5 * 1024 * 1024;
+const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+
+const upload = (location: string, mimetypes: string[] = ALLOWED_MIME_TYPES, maxFileSize: number = DEFAULT_MAX_FILE_SIZE) => {
     const baseDir = "uploads";
     const targetDir = path.join(baseDir, location);
 
-    // Ensure base directory exists
     if (!fs.existsSync(baseDir)) {
         fs.mkdirSync(baseDir);
     }
 
-    // Ensure sub directory exists
     if (!fs.existsSync(targetDir)) {
         fs.mkdirSync(targetDir, { recursive: true });
     }
@@ -28,7 +29,15 @@ const upload = (location: string) => {
 
                 cb(null, uniqueName + ext);
             }
-        })
+        }),
+        limits: { fileSize: maxFileSize },
+        fileFilter: (req, file, cb) => {
+            if (mimetypes.includes(file.mimetype)) {
+                cb(null, true);
+            } else {
+                cb(new Error(`File type "${file.mimetype}" is not allowed. Allowed types: ${mimetypes.join(", ")}`));
+            }
+        },
     });
 };
 

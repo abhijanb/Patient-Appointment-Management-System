@@ -34,6 +34,7 @@ export default function DoctorFormModal({
         <div className="px-6 py-3 bg-gray-100 border-b border-gray-200 flex justify-between items-center">
           <h2 className="text-xl font-semibold text-primary">{isEditing ? 'Edit Doctor' : 'Register New Doctor'}</h2>
           <button
+            aria-label="Close modal"
             className="text-gray-500 hover:text-red-600 transition-colors cursor-pointer"
             onClick={onClose}
           >

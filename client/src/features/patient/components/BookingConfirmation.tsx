@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { CheckCircle, CalendarDays, MapPin, Info, User, LayoutDashboard, PlusCircle } from 'lucide-react'
 import type { Doctor, ScheduleSlot } from '../patientApi'
-import { formatDateDisplay } from '../hooks/useBookAppointmentsLogic'
+import { formatDate as formatDateDisplay } from '../../../utils/date'
 
 interface Props {
   doctor: Doctor

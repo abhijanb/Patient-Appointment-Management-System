@@ -15,6 +15,7 @@ export default function DoctorPagination({ page, totalPages, onPrev, onNext }: P
       </span>
       <div className="flex gap-1.5">
         <button
+          aria-label="Previous page"
           className="w-10 h-10 border border-gray-200 rounded-lg flex items-center justify-center hover:bg-gray-100 transition-colors disabled:opacity-50 cursor-pointer"
           disabled={page <= 1}
           onClick={onPrev}
@@ -25,6 +26,7 @@ export default function DoctorPagination({ page, totalPages, onPrev, onNext }: P
           {page}
         </button>
         <button
+          aria-label="Next page"
           className="w-10 h-10 border border-gray-200 rounded-lg flex items-center justify-center hover:bg-gray-100 transition-colors disabled:opacity-50 cursor-pointer"
           disabled={page >= totalPages}
           onClick={onNext}

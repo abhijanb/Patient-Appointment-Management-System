@@ -7,13 +7,11 @@ export function usePatientDashboardLogic() {
   const { data, isLoading } = useGetUpcomingAppointmentsQuery()
   const { data: completedData } = useGetPatientAppointmentsQuery({ status: 'COMPLETED' })
 
-  const appointments = data?.data ?? []
-  const count = appointments.length
-
   const [dismissed, setDismissed] = useState(false)
-
+  const appointments = Array.isArray(data) ? data : []
+  const count = appointments.length
   const unratedAppointment = !dismissed
-    ? (completedData?.data ?? []).find((a) => a.rating === null) ?? null
+    ? (Array.isArray(completedData) ? completedData : []).find((a) => a.rating === null) ?? null
     : null
 
   return {

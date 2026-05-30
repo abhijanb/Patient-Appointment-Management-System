@@ -67,6 +67,7 @@ export default function ScheduleFilters({
         </div>
         <div className="flex items-end">
           <button
+            aria-label="Clear filters"
             className="p-2.5 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors border border-gray-200 cursor-pointer"
             title="Clear Filters"
             onClick={onClear}

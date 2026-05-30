@@ -14,7 +14,7 @@ export default function DoctorManagementTable({ dashboard, isLoading }: Props) {
       <div className="p-6 border-b border-gray-200 flex items-center justify-between">
         <h3 className="text-xl font-semibold text-primary">Doctor Management</h3>
         <div className="flex items-center gap-2">
-          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer">
+          <button aria-label="More options" className="p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer">
             <MoreVertical size={14} />
           </button>
         </div>
@@ -89,10 +89,10 @@ export default function DoctorManagementTable({ dashboard, isLoading }: Props) {
       <div className="p-4 border-t border-gray-200 bg-[#f2f4f6] flex justify-between items-center">
         <span className="text-xs text-gray-500">Showing {dashboard?.recentDoctors?.length ?? 0} of {dashboard?.totalDoctors ?? 0} Doctors</span>
         <div className="flex gap-2">
-          <button className="p-1 border border-gray-200 rounded hover:bg-gray-100 cursor-pointer">
+          <button aria-label="Previous page" className="p-1 border border-gray-200 rounded hover:bg-gray-100 cursor-pointer">
             <ChevronLeft size={14} />
           </button>
-          <button className="p-1 border border-gray-200 rounded hover:bg-gray-100 cursor-pointer">
+          <button aria-label="Next page" className="p-1 border border-gray-200 rounded hover:bg-gray-100 cursor-pointer">
             <ChevronRight size={14} />
           </button>
         </div>

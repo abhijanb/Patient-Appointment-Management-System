@@ -4,6 +4,8 @@ import {
   useGetDoctorsQuery, useGetDoctorSchedulesQuery, useBookAppointmentMutation,
 } from '../patientApi'
 import type { Doctor, ScheduleSlot } from '../patientApi'
+import type { ApiError } from '../../../utils/apiError'
+import { formatDate } from '../../../utils/date'
 
 export function getWeekDates() {
   const today = new Date()
@@ -21,19 +23,10 @@ export function getWeekDates() {
   return days
 }
 
-export function formatDateDisplay(dateStr: string) {
-  const d = new Date(dateStr + 'T00:00:00')
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-  return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`
-}
+export { formatDate as formatDateDisplay }
 
 function to24h(timeSlot: string) {
-  const [hourStr, rest] = timeSlot.split(':')
-  const hour = parseInt(hourStr)
-  const period = rest.replace(/\s/g, '').slice(2).toUpperCase()
-  if (period === 'PM' && hour !== 12) return hour + 12
-  if (period === 'AM' && hour === 12) return 0
-  return hour
+  return parseInt(timeSlot.split(':')[0])
 }
 
 function getTimePeriod(timeSlot: string) {
@@ -54,6 +47,7 @@ export function useBookAppointmentsLogic() {
   const [showFilters, setShowFilters] = useState(false)
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null)
   const [selectedDate, setSelectedDate] = useState('')
+  const [slotConsultationType, setSlotConsultationType] = useState('')
   const [selectedSlot, setSelectedSlot] = useState<ScheduleSlot | null>(null)
   const [bookError, setBookError] = useState('')
 
@@ -74,13 +68,13 @@ export function useBookAppointmentsLogic() {
   }, [])
 
   const { data: schedulesData, isLoading: schedulesLoading } = useGetDoctorSchedulesQuery(
-    { doctorId: selectedDoctor?.id ?? 0, date: selectedDate || undefined },
+    { doctorId: selectedDoctor?.id ?? 0, date: selectedDate || undefined, consultationType: slotConsultationType || undefined },
     { skip: !selectedDoctor || !selectedDate },
   )
 
   const [bookAppointment, { isLoading: booking }] = useBookAppointmentMutation()
 
-  const doctors = doctorsData?.data ?? []
+  const doctors = doctorsData?.doctors ?? []
 
   useEffect(() => {
     if (search) {
@@ -97,7 +91,7 @@ export function useBookAppointmentsLogic() {
 
   const filteredDoctors = useMemo(() => {
     return doctors.filter((d) => {
-      if (ratingFilter > 0 && d.averageRating < ratingFilter) return false
+      if (ratingFilter > 0 && Number(d.averageRating) < ratingFilter) return false
       return true
     })
   }, [doctors, ratingFilter])
@@ -110,7 +104,7 @@ export function useBookAppointmentsLogic() {
     setConsultationTypeFilter('')
   }
 
-  const schedules = schedulesData?.data ?? []
+  const schedules = schedulesData ?? []
   const weekDates = useMemo(getWeekDates, [])
 
   const morningSlots = schedules.filter((s) => getTimePeriod(s.timeSlot) === 'morning')
@@ -130,9 +124,8 @@ export function useBookAppointmentsLogic() {
     try {
       await bookAppointment({ scheduleId: selectedSlot.id }).unwrap()
       setStep(3)
-    } catch (err) {
-      const apiError = err as { data?: { message?: string } }
-      setBookError(apiError?.data?.message || 'Failed to book appointment. The slot may no longer be available.')
+    } catch (err: unknown) {
+      setBookError((err as ApiError).data?.message || 'Failed to book appointment. The slot may no longer be available.')
     }
   }
 
@@ -160,6 +153,8 @@ export function useBookAppointmentsLogic() {
     setSelectedDoctor,
     selectedDate,
     setSelectedDate,
+    slotConsultationType,
+    setSlotConsultationType,
     selectedSlot,
     setSelectedSlot,
     bookError,

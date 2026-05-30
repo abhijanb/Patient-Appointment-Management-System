@@ -9,6 +9,7 @@ import { useLoginMutation } from '../authApi'
 import { setCredentials, selectIsAuthenticated, selectAuthChecked, selectCurrentUser } from '../authSlice'
 import { useAppSelector } from '../../../store/store'
 import { loginSchema, type LoginFormData } from '../auth.validation'
+import type { ApiError } from '../../../utils/apiError'
 
 export type LoginFormInputs = LoginFormData
 
@@ -36,7 +37,7 @@ export function useLogin() {
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
-      passwordHash: '',
+      password: '',
       remember: false,
     },
   })
@@ -45,21 +46,21 @@ export function useLogin() {
     try {
       const response = await loginMutation({
         email: data.email,
-        password: data.passwordHash,
+        password: data.password,
       }).unwrap()
       
       dispatch(setCredentials({
-        user: response.data.user,
+        user: response.user,
       }))
       
       toast.success(`Welcome back! Successfully logged in.`)
-      if(response.data.user.role === 'ADMIN') {
+      if(response.user.role === 'ADMIN') {
         navigate('/admin')
       } else {
         navigate('/')
       }
-    } catch (error: any) {
-      toast.error(error.data?.message || 'Login failed')
+    } catch (error: unknown) {
+      toast.error((error as ApiError).data?.message || 'Login failed')
     }
   }
 

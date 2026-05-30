@@ -1,10 +1,12 @@
+import { lazy } from "react"
 import type { RouteObject } from "react-router-dom"
 import ProtectedRoute from "../../components/ProtectedRoute"
 import PatientLayout from "./components/patient.layout"
-import DashboardPage from "./page/DashboardPage"
-import BookAppointmentsPage from "./page/BookAppointmentsPage"
-import SettingsPage from "./page/SettingsPage"
-import AppointmentsPage from "./page/AppointmentsPage"
+
+const DashboardPage = lazy(() => import("./page/DashboardPage"))
+const BookAppointmentsPage = lazy(() => import("./page/BookAppointmentsPage"))
+const SettingsPage = lazy(() => import("./page/SettingsPage"))
+const AppointmentsPage = lazy(() => import("./page/AppointmentsPage"))
 
 const patientRoute: RouteObject[] = [
   {

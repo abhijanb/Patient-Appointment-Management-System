@@ -4,6 +4,6 @@ import * as dashboardController from "../../controllers/admin/dashboard.controll
 
 const dashboardRoute: Router = Router();
 
-dashboardRoute.get('/', asyncHandler(dashboardController.getDashboard));
+dashboardRoute.get("/", asyncHandler(dashboardController.getDashboard));
 
 export default dashboardRoute;

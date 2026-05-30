@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { Star, MessageSquareText, CheckCircle, X } from 'lucide-react'
+import toast from 'react-hot-toast'
+import type { ApiError } from '../../../utils/apiError'
 import { useRateAppointmentMutation } from '../patientApi'
 
 const descriptors = ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent']
@@ -22,8 +24,8 @@ export default function RatingModal({ appointmentId, doctorName, onClose, onSucc
       await rateAppointment({ appointmentId, rating }).unwrap()
       setSubmitted(true)
       setTimeout(onSuccess, 2000)
-    } catch {
-      // error handled by UI
+    } catch (error: unknown) {
+      toast.error((error as ApiError).data?.message || 'Failed to submit rating. Please try again.')
     }
   }
 
@@ -46,6 +48,7 @@ export default function RatingModal({ appointmentId, doctorName, onClose, onSucc
       <div className="bg-white w-full max-w-[480px] rounded-xl border border-gray-200 overflow-hidden">
         <div className="p-6 text-center border-b border-gray-200 relative">
           <button
+            aria-label="Close rating modal"
             onClick={onClose}
             className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 cursor-pointer"
           >

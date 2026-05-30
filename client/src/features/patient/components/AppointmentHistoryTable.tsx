@@ -1,3 +1,5 @@
+import { formatDate } from '../../../utils/date'
+
 const avatarBgColors = [
   'bg-secondary-container text-white',
   'bg-gray-200 text-gray-500',
@@ -14,12 +16,6 @@ function getInitials(name: string) {
     .join('')
     .toUpperCase()
     .slice(0, 2)
-}
-
-function formatTableDate(iso: string) {
-  const d = new Date(iso)
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-  return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`
 }
 
 function avatarColor(name: string) {
@@ -51,7 +47,6 @@ export default function AppointmentHistoryTable({ appointments }: Props) {
             <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500">Doctor</th>
             <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500">Date</th>
             <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500">Status</th>
-            <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500 text-right"></th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
@@ -70,13 +65,12 @@ export default function AppointmentHistoryTable({ appointments }: Props) {
                     </div>
                   </div>
                 </td>
-                <td className="px-6 py-4 text-sm">{formatTableDate(appt.schedule.availableDate)}</td>
+                <td className="px-6 py-4 text-sm">{formatDate(appt.schedule.availableDate)}</td>
                 <td className="px-6 py-4">
                   <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-gray-200 text-gray-500">
                     {appt.status}
                   </span>
                 </td>
-                <td className="px-6 py-4"></td>
               </tr>
             )
           })}

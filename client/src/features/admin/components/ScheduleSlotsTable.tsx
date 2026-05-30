@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight, LoaderCircle } from 'lucide-react'
 import type { ScheduleSlot } from '../admin.type'
-import { typeStyles, statusStyles, typeLabels } from '../hooks/useDoctorProfileLogic'
+import { typeStyles, statusStyles, typeLabels } from '../constants'
 
 interface Props {
   slots: ScheduleSlot[]
@@ -68,6 +68,7 @@ export default function ScheduleSlotsTable({ slots, paginatedSlots, isLoading, s
           <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Showing {paginatedSlots.length} of {slots.length} slot{slots.length !== 1 ? 's' : ''}</p>
           <div className="flex gap-1.5">
             <button
+              aria-label="Previous page"
               className="w-8 h-8 border border-gray-200 rounded-lg flex items-center justify-center hover:bg-gray-100 transition-colors disabled:opacity-50 cursor-pointer"
               disabled={slotPage <= 1}
               onClick={() => onPageChange(slotPage - 1)}
@@ -78,6 +79,7 @@ export default function ScheduleSlotsTable({ slots, paginatedSlots, isLoading, s
               {slotPage}
             </button>
             <button
+              aria-label="Next page"
               className="w-8 h-8 border border-gray-200 rounded-lg flex items-center justify-center hover:bg-gray-100 transition-colors disabled:opacity-50 cursor-pointer"
               disabled={slotPage >= totalSlotPages}
               onClick={() => onPageChange(slotPage + 1)}

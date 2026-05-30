@@ -35,6 +35,7 @@ export default function SecuritySection({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="flex flex-col gap-1 relative">
               <input
+                aria-label="Current password"
                 className="rounded-lg border-gray-200 focus:border-primary focus:ring-primary py-2.5 px-4 text-sm pr-10"
                 placeholder="Current Password"
                 type={showCurrentPwd ? 'text' : 'password'}
@@ -43,6 +44,7 @@ export default function SecuritySection({
               />
               <button
                 type="button"
+                aria-label="Toggle current password visibility"
                 onClick={onToggleShowCurrentPwd}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
               >
@@ -51,6 +53,7 @@ export default function SecuritySection({
             </div>
             <div className="flex flex-col gap-1 relative">
               <input
+                aria-label="New password"
                 className="rounded-lg border-gray-200 focus:border-primary focus:ring-primary py-2.5 px-4 text-sm pr-10"
                 placeholder="New Password"
                 type={showNewPwd ? 'text' : 'password'}
@@ -59,6 +62,7 @@ export default function SecuritySection({
               />
               <button
                 type="button"
+                aria-label="Toggle new password visibility"
                 onClick={onToggleShowNewPwd}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
               >
@@ -67,6 +71,7 @@ export default function SecuritySection({
             </div>
             <div className="flex flex-col gap-1 relative">
               <input
+                aria-label="Confirm new password"
                 className="rounded-lg border-gray-200 focus:border-primary focus:ring-primary py-2.5 px-4 text-sm pr-10"
                 placeholder="Confirm New Password"
                 type={showConfirmPwd ? 'text' : 'password'}
@@ -75,6 +80,7 @@ export default function SecuritySection({
               />
               <button
                 type="button"
+                aria-label="Toggle confirm password visibility"
                 onClick={onToggleShowConfirmPwd}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
               >

@@ -9,12 +9,7 @@ export interface User {
 export interface RegisterRequest {
   name: string;
   email: string;
-  passwordHash: string;
-}
-
-export interface RegisterResponse {
-  data: User;
-  message: string;
+  password: string;
 }
 
 export interface LoginRequest {
@@ -23,16 +18,12 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  data: {
-    user: User;
-  };
-  message: string;
+  user: User;
 }
 
-export interface MeResponse {
-  data: User;
-  message: string;
-}
+export type RegisterResponse = User;
+
+export interface MeResponse extends User {}
 
 export interface UpdateProfileRequest {
   name?: string;
@@ -44,7 +35,4 @@ export interface ChangePasswordRequest {
   newPassword: string;
 }
 
-export interface UpdateProfileResponse {
-  data: User;
-  message: string;
-}
+export type UpdateProfileResponse = User;

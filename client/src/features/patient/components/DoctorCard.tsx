@@ -18,7 +18,7 @@ export default function DoctorCard({ doc, onViewSlots }: Props) {
           <p className="text-sm text-gray-500">{doc.specialization}</p>
           <div className="flex items-center gap-1 mt-1">
             <Star size={16} className="text-yellow-500 fill-yellow-500" />
-            <span className="text-xs font-semibold">{doc.averageRating.toFixed(1)}</span>
+            <span className="text-xs font-semibold">{Number(doc.averageRating).toFixed(1)}</span>
           </div>
         </div>
       </div>

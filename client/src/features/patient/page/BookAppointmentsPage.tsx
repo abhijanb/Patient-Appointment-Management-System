@@ -19,6 +19,7 @@ export default function BookAppointmentsPage() {
     showFilters, setShowFilters,
     selectedDoctor, setSelectedDoctor,
     selectedDate, setSelectedDate,
+    slotConsultationType, setSlotConsultationType,
     selectedSlot, setSelectedSlot,
     bookError,
     doctorsLoading, schedulesLoading, booking, schedules,
@@ -92,6 +93,22 @@ export default function BookAppointmentsPage() {
               selectedDate={selectedDate}
               onSelectDate={(d) => { setSelectedDate(d); setSelectedSlot(null) }}
             />
+
+            <div className="flex gap-2">
+              {['', 'IN_PERSON', 'TELEHEALTH'].map((t) => (
+                <button
+                  key={t}
+                  onClick={() => { setSlotConsultationType(t); setSelectedSlot(null) }}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold border transition-all cursor-pointer ${
+                    slotConsultationType === t
+                      ? 'bg-primary text-white border-primary'
+                      : 'border-gray-200 text-gray-600 hover:border-gray-400'
+                  }`}
+                >
+                  {t === '' ? 'All Types' : t === 'IN_PERSON' ? 'In-Person' : 'Telehealth'}
+                </button>
+              ))}
+            </div>
 
             {schedulesLoading ? (
               <p className="text-center text-gray-400 py-8">Loading available slots...</p>

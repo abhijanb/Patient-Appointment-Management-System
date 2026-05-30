@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import type { Doctor, DoctorListRequest, DashboardData, ScheduleSlot, ScheduleListRequest, PaginatedData, PaginatedDoctors, ApiResponse } from './admin.type'
+import type { Doctor, DoctorListRequest, DashboardData, ScheduleSlot, ScheduleListRequest, PaginatedData, PaginatedDoctors } from './admin.type'
 
 export const adminApi = createApi({
   reducerPath: 'adminApi',
@@ -9,45 +9,45 @@ export const adminApi = createApi({
   }),
   tagTypes: ['Doctors', 'Dashboard', 'Schedules'],
   endpoints: (builder) => ({
-    getSchedules: builder.query<ApiResponse<PaginatedData<ScheduleSlot>>, ScheduleListRequest>({
+    getSchedules: builder.query<PaginatedData<ScheduleSlot>, ScheduleListRequest>({
       query: (params) => ({
         url: '/admin/schedules',
         params,
       }),
       providesTags: ['Schedules'],
     }),
-    getDashboard: builder.query<ApiResponse<DashboardData>, void>({
+    getDashboard: builder.query<DashboardData, void>({
       query: () => '/admin/dashboard',
       providesTags: ['Dashboard'],
     }),
-    getDoctors: builder.query<ApiResponse<PaginatedDoctors>, DoctorListRequest>({
+    getDoctors: builder.query<PaginatedDoctors, DoctorListRequest>({
       query: (params) => ({
-        url: '/admin/manage-doctors/list-doctors',
+        url: '/admin/manage-doctors',
         params,
       }),
       providesTags: ['Doctors'],
     }),
-    getDoctorById: builder.query<ApiResponse<Doctor>, number>({
+    getDoctorById: builder.query<Doctor, number>({
       query: (id) => `/admin/manage-doctors/${id}`,
       providesTags: ['Doctors'],
     }),
-    addDoctor: builder.mutation<ApiResponse<Doctor>, FormData>({
+    addDoctor: builder.mutation<Doctor, FormData>({
       query: (body) => ({
-        url: '/admin/manage-doctors/add-doctor',
+        url: '/admin/manage-doctors',
         method: 'POST',
         body,
       }),
       invalidatesTags: ['Doctors'],
     }),
-    updateDoctor: builder.mutation<ApiResponse<Doctor>, FormData>({
-      query: (body) => ({
-        url: '/admin/manage-doctors/update-doctor',
-        method: 'PUT',
+    updateDoctor: builder.mutation<Doctor, { id: number; body: FormData }>({
+      query: ({ id, body }) => ({
+        url: `/admin/manage-doctors/${id}`,
+        method: 'PATCH',
         body,
       }),
       invalidatesTags: ['Doctors'],
     }),
-    createSchedule: builder.mutation<ApiResponse<ScheduleSlot>, { doctorId: number; availableDate: string; timeSlot: string; consultationType: 'IN_PERSON' | 'TELEHEALTH' }>({
+    createSchedule: builder.mutation<ScheduleSlot, { doctorId: number; availableDate: string; timeSlot: string; consultationType: 'IN_PERSON' | 'TELEHEALTH' }>({
       query: (body) => ({
         url: '/admin/schedules',
         method: 'POST',
@@ -55,22 +55,25 @@ export const adminApi = createApi({
       }),
       invalidatesTags: ['Schedules'],
     }),
-    deleteDoctor: builder.mutation<ApiResponse<null>, number>({
+    deleteDoctor: builder.mutation<null, number>({
       query: (id) => ({
-        url: `/admin/manage-doctors/delete-doctor/${id}`,
+        url: `/admin/manage-doctors/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Doctors'],
     }),
-    deleteSchedule: builder.mutation<ApiResponse<null>, number>({
+    deleteSchedule: builder.mutation<null, number>({
       query: (id) => ({
         url: `/admin/schedules/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Schedules'],
     }),
-    getDoctorSchedule: builder.query<ApiResponse<PaginatedData<ScheduleSlot>>, number>({
-      query: (doctorId) => `/admin/schedules?doctorId=${doctorId}&limit=100`,
+    getDoctorSchedule: builder.query<PaginatedData<ScheduleSlot>, { doctorId: number; page?: number; limit?: number }>({
+      query: ({ doctorId, ...params }) => ({
+        url: `/admin/schedules`,
+        params: { doctorId, ...params },
+      }),
       providesTags: ['Schedules'],
     }),
   }),
