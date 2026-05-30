@@ -471,7 +471,7 @@ pnpm dev             # Starts on port 5173
 
 ## Demo
 
-[Demo Video](./server/uploads/demo/output.mp4)
+[Demo Video](./server/output.mp4)
 
 ---
 
